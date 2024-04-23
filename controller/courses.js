@@ -2,6 +2,7 @@ const Joi = require("joi");
 const Courses = require("../model/Courses");
 const path = require("path");
 const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 
 const fetchCourses = async (req, res, err) => {
     try {
@@ -48,14 +49,31 @@ const fetchCourses = async (req, res, err) => {
 const createCourses = async (req, res, next) => {
     try {
         let imagePath = null;
+        let cloudImagePath = null;
+        console.log(req.files);
         if (req.files?.image) {
+            
+            console.log(cloudImagePath);
             let rootPath = path.resolve();
             let uniqueTimestamp = Date.now() + Math.floor(Math.random() * 1000);
             imagePath = path.join("/", "uploads", `${uniqueTimestamp}-${req.files.image.name}`).replaceAll("\\", "/");
+            
             req.files.image.mv(path.join(rootPath, imagePath));
-            console.log(imagePath);
+            let newPath = path.join(rootPath, imagePath);
+            cloudImagePath = await cloudinary.uploader.upload(newPath, {
+                folder: "unicat",
+                crop: "scale",
+            });
+            // console.log(imagePath);
+            console.log("cloudinary path", cloudImagePath);
+            console.log("cloudinary path secure url", cloudImagePath.secure_url);
+
         }
-        let courses = await Courses.create({ ...req.body, image: imagePath, createdBy: req.user._id });
+        let courses = await Courses.create({
+            ...req.body,
+            image: cloudImagePath.secure_url,
+            createdBy: req.user._id,
+        });
         console.log("Create Products");
         res.send(courses);
     } catch (err) {
