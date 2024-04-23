@@ -17,6 +17,6 @@ app.use(handleServerError);
 
 require("./config/database");
 
-app.listen(8000, () => {
+app.listen(5000, () => {
     console.log("Server Started");
 });
