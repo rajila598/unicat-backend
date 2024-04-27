@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { LECTURER } = require("../constant/role");
+const { TUTOR } = require("../constant/role");
 function checkAuthentication(req, res, next) {
     console.log(req.headers.authorization);
     let token = req.headers.authorization?.replaceAll("Bearer ", "");
@@ -15,8 +15,8 @@ function checkAuthentication(req, res, next) {
     });
 }
 
-const isLecturer = (req, res, next) => {
-    if (req.user.role === LECTURER) {
+const isTutor = (req, res, next) => {
+    if (req.user.role === TUTOR) {
         return next();
     }
     res.status(403).send({
@@ -26,5 +26,5 @@ const isLecturer = (req, res, next) => {
 
 module.exports = {
     checkAuthentication,
-    isLecturer,
+    isTutor,
 };

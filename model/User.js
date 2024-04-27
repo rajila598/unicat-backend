@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { LECTURER, STUDENT } = require("../constant/role");
+const { TUTOR, STUDENT } = require("../constant/role");
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
@@ -41,7 +41,7 @@ const UserSchema = new Schema({
     },
     role: {
         type: String,
-        enum: [LECTURER, STUDENT],
+        enum: [TUTOR, STUDENT],
         required: true,
         set: (value) => {
             console.log(value);

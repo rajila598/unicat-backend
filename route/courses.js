@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { fetchCourses, createCourses, updateCourses, deleteCourses } = require("../controller/courses");
-const { checkAuthentication, isLecturer } = require("../middleware/auth");
+const { checkAuthentication, isTutor } = require("../middleware/auth");
 const Joi = require("joi");
 const { checkValidationSchema } = require("../middleware/checkValidationSchema");
 
@@ -20,7 +20,7 @@ const courseValidationSchema = Joi.object({
 
 
 router.get("", fetchCourses);
-router.post("", checkAuthentication, isLecturer, checkValidationSchema(courseValidationSchema), createCourses);
+router.post("", checkAuthentication, isTutor, checkValidationSchema(courseValidationSchema), createCourses);
 router.put("/:_id", checkAuthentication, updateCourses);
 router.delete("/:_id", deleteCourses);
 

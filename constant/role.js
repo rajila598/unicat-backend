@@ -1,7 +1,7 @@
-const LECTURER = "lecturer";
+const TUTOR = "tutor";
 const STUDENT = "student";
 
 module.exports = {
-    LECTURER,
+    TUTOR,
     STUDENT
 }
