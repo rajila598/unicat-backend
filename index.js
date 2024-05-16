@@ -3,18 +3,16 @@ const app = express();
 const courseRoutes = require("./route/courses");
 const userRoutes = require("./route/auth");
 const handleServerError = require("./middleware/handleServerError");
-const fileUpload = require("express-fileupload");
+// const fileUpload = require("express-fileupload");
 require("dotenv").config();
 const cloudinary = require("cloudinary");
 const cors = require("cors");
 // import {v2 as cloudinary} from 'cloudinary';
 
-app.use("/api/test", (req,res) => {
-    res.send("Success test")
-})
+
 
 app.use(express.json());
-app.use(fileUpload());
+// app.use(fileUpload());
 
 const corsOptions = {
     origin: true,
@@ -30,8 +28,10 @@ cloudinary.config({
 
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
-
-app.use("/uploads", express.static("uploads"));
+app.use("/api/test", (req,res) => {
+    res.send("Success test")
+})
+// app.use("/uploads", express.static("uploads"));
 app.use("/api/courses", courseRoutes);
 app.use("/api/auth", userRoutes);
 
