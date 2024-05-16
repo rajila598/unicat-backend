@@ -2,6 +2,7 @@ const User = require("../model/User");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
 var jwt = require("jsonwebtoken");
+const { TUTOR } = require("../constant/role");
 
 const signup = async (req, res, next) => {
     try {
@@ -39,7 +40,30 @@ const login = async (req, res) => {
     console.log("User login");
 };
 
+const fetchTutor = async (req, res, next) => {
+    try{
+        let perPage = parseInt(req.query.perPage) || 4;
+        let page = parseInt(req.query.page) || 1;
+        let tutorFilter = {
+            title: new RegExp(req.query.search, "i"),
+        };
+
+        let tutor = await User.find({ role: TUTOR }).skip((page-1) * perPage).limit(perPage);
+        let totalTutor = await User.countDocuments(tutorFilter);
+        console.log("User fetched")
+        res.send({
+            page: page,
+            perPage: perPage,
+            total: totalTutor,
+            data: tutor
+        })
+    }catch(err) {
+        next(err);
+    }
+}
+
 module.exports = {
     signup,
     login,
+    fetchTutor,
 };

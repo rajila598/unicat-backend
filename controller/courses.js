@@ -7,9 +7,9 @@ const cloudinary = require("cloudinary").v2;
 const fetchCourses = async (req, res, err) => {
     try {
         let sort = req.query.sort || "dateDesc";
-        let priceFrom = parseFloat(req.query.priceForm) || 0;
+        let priceFrom = parseFloat(req.query.priceFrom) || 0;
         let priceTo = parseFloat(req.query.priceTo) || 99999999;
-        let perPage = parseInt(req.query.perPage) || 6;
+        let perPage = parseInt(req.query.perPage) || 9999;
         let page = parseInt(req.query.page) || 1;
         let sortBy = {
             createdAt: -1,
@@ -52,12 +52,11 @@ const createCourses = async (req, res, next) => {
         let cloudImagePath = null;
         console.log(req.files);
         if (req.files?.image) {
-            
             console.log(cloudImagePath);
             let rootPath = path.resolve();
             let uniqueTimestamp = Date.now() + Math.floor(Math.random() * 1000);
             imagePath = path.join("/", "uploads", `${uniqueTimestamp}-${req.files.image.name}`).replaceAll("\\", "/");
-            
+
             req.files.image.mv(path.join(rootPath, imagePath));
             let newPath = path.join(rootPath, imagePath);
             cloudImagePath = await cloudinary.uploader.upload(newPath, {
@@ -67,7 +66,6 @@ const createCourses = async (req, res, next) => {
             // console.log(imagePath);
             console.log("cloudinary path", cloudImagePath);
             console.log("cloudinary path secure url", cloudImagePath.secure_url);
-
         }
         let courses = await Courses.create({
             ...req.body,
@@ -90,8 +88,13 @@ const updateCourses = async (req, res, next) => {
             error.msg = "Not Found";
             throw error;
         }
+        let courses = await Courses.findOneAndUpdate(
+            { _id: req.params._id },
+            { $set: { ...req.body, image: cloudImagePath.secure_url, createdBy: req.user._id } },
+            { new: true }
+        );
         console.log("Update Products");
-        res.send(`${req.params._id} Updated`);
+        res.send(courses,`${req.params._id} Updated`);
     } catch (err) {
         next(err);
     }

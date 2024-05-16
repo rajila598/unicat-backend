@@ -9,6 +9,10 @@ const cloudinary = require("cloudinary");
 const cors = require("cors");
 // import {v2 as cloudinary} from 'cloudinary';
 
+app.use("/api/test", (req,res) => {
+    res.send("Success test")
+})
+
 app.use(express.json());
 app.use(fileUpload());
 

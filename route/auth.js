@@ -1,5 +1,5 @@
 const express = require("express");
-const { signup, login } = require("../controller/auth");
+const { signup, login, fetchTutor } = require("../controller/auth");
 const { checkValidationSchema } = require("../middleware/checkValidationSchema");
 const Joi = require("joi");
 const router = express.Router();
@@ -17,5 +17,6 @@ const loginValidationSchema = Joi.object({
 
 router.post("/signup", checkValidationSchema(signupValidationSchema), signup);
 router.post("/login", checkValidationSchema(loginValidationSchema), login);
+router.get("/tutor", fetchTutor);
 
 module.exports = router;

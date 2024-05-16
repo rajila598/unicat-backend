@@ -23,6 +23,9 @@ const UserSchema = new Schema({
             type: Number,
         },
     },
+    department: {
+        type: String,
+    },
     email: {
         type: String,
         required: true,

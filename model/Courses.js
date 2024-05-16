@@ -18,6 +18,10 @@ const CoursesSchema = new Schema({
         // required: true,
         default: 0
     },
+    category: {
+        type: String,
+        
+    },
     createdBy: {
         type: ObjectId,
         ref: "User",
