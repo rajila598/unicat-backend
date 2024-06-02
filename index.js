@@ -2,17 +2,17 @@ const express = require("express");
 const app = express();
 const courseRoutes = require("./route/courses");
 const userRoutes = require("./route/auth");
+const contactRoutes = require("./route/contact");
 const handleServerError = require("./middleware/handleServerError");
-// const fileUpload = require("express-fileupload");
+const fileUpload = require("express-fileupload");
 require("dotenv").config();
 const cloudinary = require("cloudinary");
 const cors = require("cors");
 // import {v2 as cloudinary} from 'cloudinary';
 
 
-
 app.use(express.json());
-// app.use(fileUpload());
+app.use(fileUpload());
 
 const corsOptions = {
     origin: true,
@@ -31,9 +31,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/test", (req,res) => {
     res.send("Success test")
 })
-// app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 app.use("/api/courses", courseRoutes);
 app.use("/api/auth", userRoutes);
+
+app.use("/api/contact", contactRoutes)
 
 app.use(handleServerError);
 

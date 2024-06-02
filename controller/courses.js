@@ -46,6 +46,14 @@ const fetchCourses = async (req, res, err) => {
         next(err);
     }
 };
+const fetchCourseByUserId = async (req, res, next) => {
+    try{
+        let courses = await Courses.findById({ createdBy: req.createdBy._id})
+        res.send(courses)
+    }catch(err){
+
+    }
+}
 const createCourses = async (req, res, next) => {
     try {
         let imagePath = null;
@@ -123,4 +131,5 @@ module.exports = {
     createCourses,
     updateCourses,
     deleteCourses,
+    fetchCourseByUserId
 };
