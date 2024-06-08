@@ -47,13 +47,11 @@ const fetchCourses = async (req, res, err) => {
     }
 };
 const fetchCourseByUserId = async (req, res, next) => {
-    try{
-        let courses = await Courses.findById({ createdBy: req.createdBy._id})
-        res.send(courses)
-    }catch(err){
-
-    }
-}
+    try {
+        let courses = await Courses.findById({ createdBy: req.createdBy._id });
+        res.send(courses);
+    } catch (err) {}
+};
 const createCourses = async (req, res, next) => {
     try {
         let imagePath = null;
@@ -96,13 +94,14 @@ const updateCourses = async (req, res, next) => {
             error.msg = "Not Found";
             throw error;
         }
+        
         let courses = await Courses.findOneAndUpdate(
             { _id: req.params._id },
-            { $set: { ...req.body, image: cloudImagePath.secure_url, createdBy: req.user._id } },
+            { $set: { ...req.body, image: req.files, createdBy: req.user._id } },
             { new: true }
         );
         console.log("Update Products");
-        res.send(courses,`${req.params._id} Updated`);
+        res.send(courses, `${req.params._id} Updated`);
     } catch (err) {
         next(err);
     }
@@ -131,5 +130,5 @@ module.exports = {
     createCourses,
     updateCourses,
     deleteCourses,
-    fetchCourseByUserId
+    fetchCourseByUserId,
 };
