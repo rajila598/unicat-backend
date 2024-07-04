@@ -62,8 +62,19 @@ const fetchTutor = async (req, res, next) => {
     }
 }
 
+const fetchTutorById = async (req, res, next) => {
+    try{
+        let tutor = await User.find(req.params._id);
+        res.send(tutor)
+        console.log(tutor);
+    } catch (err){
+        console.log(err);
+    }
+}
+
 module.exports = {
     signup,
     login,
     fetchTutor,
+    fetchTutorById,
 };

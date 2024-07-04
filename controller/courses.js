@@ -48,9 +48,11 @@ const fetchCourses = async (req, res, err) => {
 };
 const fetchCourseByUserId = async (req, res, next) => {
     try {
-        let courses = await Courses.findById({ createdBy: req.createdBy._id });
+        let courses = await Courses.findById(req.params._id);
         res.send(courses);
-    } catch (err) {}
+    } catch (err) {
+        console.log(err);
+    }
 };
 const createCourses = async (req, res, next) => {
     try {
@@ -94,7 +96,7 @@ const updateCourses = async (req, res, next) => {
             error.msg = "Not Found";
             throw error;
         }
-        
+
         let courses = await Courses.findOneAndUpdate(
             { _id: req.params._id },
             { $set: { ...req.body, image: req.files, createdBy: req.user._id } },
@@ -116,8 +118,19 @@ const deleteCourses = async (req, res, next) => {
             error.msg = "Not Found";
             throw error;
         }
+        if (matched.image) {
+            // Extract the public_id from the image URL
+            const publicId = matched.image.split("/").slice(-2).join("/").split(".")[0];
+            await cloudinary.uploader.destroy(publicId, (error, result) => {
+                if (error) {
+                    console.error("Error deleting image from Cloudinary:", error);
+                } else {
+                    console.log("Image deleted from Cloudinary:", result);
+                }
+            });
+        }
+
         let course = await Courses.findByIdAndDelete(req.params._id);
-        fs.unlinkSync(path.join(path.resolve(), course.image));
         console.log("Delete Products");
         res.send(`${req.params._id} Deleted`);
     } catch (err) {
